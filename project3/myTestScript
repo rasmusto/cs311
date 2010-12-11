@@ -1,0 +1,260 @@
+#! /bin/sh
+
+function doTest
+{
+   case $1 in
+   1) ls ?akefile
+   echo "Is a makefile or Makefile listed above?";;
+   2) make
+   ls createPict
+   ls growTree
+   ls buildHouse
+   ls putPerson
+   ls showAll
+   ls showTrees
+   ls showHouses
+   ls showPeople
+   ls remove
+   echo "Are the 9 files listed above?";;
+   3) ls .draw_config
+   echo "Is .draw_config listed above?";;
+   4) createPict
+   echo "Is there a Usage message listed above?";;
+   5) touch aaa
+   createPict aaa
+   rm aaa
+   echo "Is there an error message about file aaa already existing?";;
+   6) rm -f pic1
+   createPict pic1
+   ls pic1
+   echo "Is there a pic1 file listed above?";;
+   7) od -Ad -i pic1
+   echo "Here is pic1's meta data";;
+   8) od -Ad -c .draw_config
+   echo "Here is .draw_config's contents."
+   echo "You should see pic1 at the beginning.";;
+   9) rm -f notHere
+   growTree notHere <<END
+lllllllllll
+END
+   echo "Did you see an error message about the file notHere not existing?";;
+   10) rm -f pic1
+   createPict pic1
+   growTree <<END
+llllllllllllllllllllllkkkkkkkkkk
+END
+echo "Do you see 1 Tree?";;
+   11) doTest 10
+   od -Ad -c pic1
+   echo "You should see a 'T'. Note the byte number.";;
+   12) doTest 10
+   od -Ad -i pic1
+   echo "Is the second int listed in the file the same byte number as from test 11?";;
+   13) doTest 10
+   growTree pic1 <<END
+lllllllllkkkklllllllllllllllllllllllkkkkkkkkkk
+END
+   echo "Do you see 2 trees?";;
+   14) doTest 13
+   od -Ad -i pic1
+   echo "struct 1: the ints 22 and 10 in the struct for the first tree."
+   echo "struct 2: the ints 32 and 14 in the struct for the second tree.";;
+   15) rm -f notHere
+   buildHouse notHere
+   echo "You should see an error message about file notHere not existing.";;
+   16) rm -f pic2
+   createPict pic2
+   buildHouse <<END
+lllllllkk
+END
+   echo "Do you see 1 House?";;
+   17) doTest 16
+   od -Ad -c pic2
+   echo "You should see a 'H'. Note the byte number.";;
+   18) doTest 16
+   od -Ad -i pic2
+   echo "Is the first int listed in the file the same byte number as from test 11?";;
+   19) doTest 16
+   buildHouse pic2 <<END
+llllllllllllllkkklllllllkk
+END
+   echo "Do you see 2 houses?";;
+   20) doTest 19
+   od -Ad -i pic2
+   echo "struct 1: the ints 7 and 2 in the struct for the first house."
+   echo "struct 2: the ints 21 and 5 in the struct for the second house.";;
+   21) rm -f notHere
+      putPerson notHere <<END
+llllllllkkkkkkkkkkk
+END
+   echo "Did you see an error message about the file notHere not existing?";;
+   22) rm -f pic3
+   createPict pic3
+   putPerson <<END
+llllllllllllkkkkkkkkkkk
+END
+   echo "Do you see 1 Person?";;
+   23) doTest 22
+   od -Ad -c pic3
+   echo "You should see a 'P'. Note the byte number.";;
+   24) doTest 22
+   od -Ad -i pic3
+   echo "Is the third int listed in the file the same byte number as from test 23?";;
+   25) doTest 22
+   putPerson pic3 <<END
+llllllllkkkkllllllllllllkkkkkkkkkkk
+END
+   echo "Do you see 2 persons?";;
+   26) doTest 25
+   od -Ad -i pic3
+   echo "struct 1: the ints 12 and 11 in the struct for the first person."
+   echo "struct 2: the ints 20 and 15 in the struct for the second person.";;
+   27) rm -f pic4
+   createPict pic4
+   putPerson pic4 <<END
+llllkkk
+END
+   buildHouse pic4 <<END
+llllllllkkkllllkkk
+END
+   buildHouse pic4 <<END
+llllllllllllkkkllllllllkkkllllkkk
+END
+   growTree pic4 <<END
+lllllllllllkkkkllllllllllllkkkllllllllkkkllllkkkk
+END
+   putPerson pic4 <<END
+lllllllkkkkkklllllllllllkkkkllllllllllllkkkllllllllkkklllllllkkk
+END
+   clear
+   growTree pic4 <<END
+llllllllkkkkklllllllkkkkkklllllllllllkkkkllllllllllllkkkllllllllkkkllllllllkkk
+END
+   echo "Do you see 2 of each?"
+   echo "They should be positioned left to right, going down P H H T P T";;
+   28) doTest 27
+   putPerson pic4 <<END
+kkkkkkkllkkkllllkkk
+END
+   growTree pic4 <<END
+llllllkkkkkkkkkkkllkkkllllkkk
+END
+   buildHouse pic4 <<END
+llllllkkkkllllllkkkkkkkkkkkllkkkllllkkk
+END
+   buildHouse pic4 <<END
+llllllkkkkllllllkkkkllllllkkkkkkkkkkkllkkkllllkkk
+END
+   putPerson pic4 <<END
+lllllkkkkkllllllkkkkllllllkkkkllllllkkkkkkkkkkkllkkkllllkkk
+END
+   showTrees pic4
+   echo "Do you see 3 trees and nothing else?";;
+   29) doTest 28
+   clear
+   showHouses pic4
+   echo "Do you see 4 houses and nothing else?";;
+   30) doTest 28
+   clear
+   showPeople pic4
+   echo "Do you see 4 persons and nothing else?";;
+   31) showTrees all
+   echo "Do you see 5 trees in a slant like this \  and nothing else?";;
+   32) showHouses all
+   echo "Do you see 4 houses in a vertical line and nothing else?";;
+   33) showPeople all
+   echo "Do you see 6 persons in a horizontal row and nothing else?";;
+   34) showAll all
+   echo "Do you see all the figures from the last 3 tests? 5 trees, 4 houses, 6 persons?";;
+   35) showTrees testerT
+   echo "Do you see 3 trees in a straight vertical column and nothing else?"
+   echo "If you see a tree out of line, no points.";;
+   36) showHouses testerH
+   echo "Do you see 3 houses in a straight horizontal row and nothing else?"
+   echo "If one house is above the others, no points.";;
+   37) showPeople testerP
+   echo "Do you see 4 persons touching and slanted like this / ?"
+   echo "If one person is not touching the others, no points.";;
+   38) cp all allRmLastTree
+   echo "Now we are going to test remove. You must move the cursor to the top of the"
+   echo "top left tree and press Enter. It is the LAST tree in the LL. Press Enter when ready."
+   read abc
+   remove allRmLastTree
+   echo "Did it disappear?";;
+   39) showTrees allRmLastTree
+   echo "Is it still gone? You should see just 4 trees in a slant. Top left one--gone.";;
+   40) echo "Now we are going to remove the first tree in the LL from the same picture."
+   echo "Move the cursor to the top of the current top left tree and press Enter."
+   echo "Press Enter to start."
+   read abc
+   remove allRmLastTree
+   echo "Did it disappear?";;
+   41) showTrees allRmLastTree
+   echo "Is it still gone? You should see just 3 trees in a slant.";;
+   42) echo "Now we will remove a middle tree. Position the cursor on the middle tree and"
+   echo "the press Enter. Press Enter to start."
+   read abc
+   remove allRmLastTree
+   echo "Did it disappear?";;
+   43) showTrees allRmLastTree
+   echo "Is it still gone? You should see just 2 trees in a slant with a gap between them.";;
+   44) ls -l allRmLastTree
+   ls -l all
+   echo "Compare the size of the top file with the bottom file."
+   echo "The top file had 3 trees removed and should be 96 bytes less than the bottom file";;
+   45) cp all allRmMiddleHouse
+   echo "Move the cursor to the 4th person from the left and press Enter. Press Enter to start."
+   read abc
+   remove allRmMiddleHouse
+   echo "Did it disappear?";;
+   46) showPeople allRmMiddleHouse
+   echo "Is it still gone? You should see 5 persons in a row (gap for missing person).";;
+   47) echo "Let's remove the first person from the LL. Go to the far left person and press Enter."
+   echo "Press Enter to start."
+   read abc
+   remove allRmMiddleHouse
+   echo "Did it disappear?";;
+   48) showPeople allRmMiddleHouse
+   echo "Is it still gone? You should see 4 persons in a row. (far left gone).";;
+   49) echo "Let's remove the last person from the LL. Go to the far left person and press Enter."
+   echo "Press Enter to start."
+   read abc
+   remove allRmMiddleHouse
+   echo "Did it disappear?";;
+   50) showPeople allRmMiddleHouse
+   echo "Is it still gone? You should see 3 persons in a row. (far left gone).";;
+   51) ls -l allRmMiddleHouse
+   ls -l all
+   echo "Compare the size of the top file with the bottom file."
+   echo "The top file had 3 houses removed and should be 96 bytes less than the bottom file";;
+   esac
+}
+
+# get necessary files
+cp /nfs/stak/a2/classes/eecs/fall2010/cs311/public_html/Fall10Projects/Proj3/files/* .
+
+# main function
+ans=100
+
+echo "There are 49 tests. The only ones you have to do in order are: 38-43 and 44-49."
+echo "Type the number of the test you want to run at the prompt."
+
+if test -e proj3.tar.gz
+then
+   gzip -d proj3.tar
+   tar -xf proj3.tar
+fi
+
+while [ $ans -ne 0 ]
+do
+  if [ $ans -ne 100 ]
+  then
+     echo "Test $ans completed"
+  fi
+  echo 
+  echo -n "Which test do you want? (0 to exit) "
+  read ans
+  echo
+  doTest $ans
+done
+exit
