@@ -1,10 +1,3 @@
-A
-C
-A
-D
-B
-B
-i
 #!/usr/bin/perl -w
 use strict;
 package cs311;
